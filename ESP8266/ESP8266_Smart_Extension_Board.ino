@@ -1,45 +1,71 @@
 #include <WiFiManager.h> // https://github.com/tzapu/WiFiManager
 #include <ESP8266WiFi.h>
 
-#define Toggle_Trigger_Pin 1 // TX pin will trigger the wifi configuration portal when set to LOW
-#define Wifi_Led_Pin 3 // RX Wifi Connection Indicator
+#define Toggle_Trigger_Pin 1 // TX - pin will trigger the wifi configuration portal when set to LOW
+#define Wifi_Led_Pin 3 // RX - Wifi Connection Indicator
+
+#define RelayPin1 5  //D1
+#define RelayPin2 4  //D2
+#define RelayPin3 14 //D5
+#define RelayPin4 12 //D6
+
+#define SwitchPin1 10  //SD3
+#define SwitchPin2 0   //D3 
+#define SwitchPin3 13  //D7
+#define SwitchPin4 3   //RX
+
 int timeout = 120; // wifi config trigger timeout
 
-// Set web server port number to 80
-WiFiServer server(80);
-// Variable to store the HTTP request
-String header;
+WiFiServer server(80); // Set web server port number to 80
 
+String header; // Variable to store the HTTP request
 
-void toggle_wificonnect() {
+void wifiConnect() {
  
-    // is configuration portal requested?
+    // wifi configuration portal request button
     if ( digitalRead(Toggle_Trigger_Pin) == LOW) {
-        digitalWrite(Wifi_Led_Pin, HIGH);
-        
-        WiFiManager wm;    
-        
+
         Serial.println("Wifi Config Mode Activated");
         
-        //reset settings - for testing
-        //wm.resetSettings();
-    
-        // set configportal timeout
-        wm.setConfigPortalTimeout(timeout);
+        digitalWrite(Wifi_Led_Pin, HIGH); // Wifi Connection Mode Indicator On         
 
+        WiFiManager wm;    
+        // wm.resetSettings(); // reset wifi settings - uncomment for testing
+        wm.setConfigPortalTimeout(timeout); // set configportal timeout
+
+        // uncomment below part-1 and part-2 for custom static IP address. CAUTION: Static IP may conflict IP DHCP IP address, 
+        // Only use if you know how to configure your router to exclude the static IP address from the DHCP scope and know your Gateway and Subnet mask.
+        // // Added parameters for static IP configuration part-1
+
+        // WiFiManagerParameter custom_ip("ip", "Static IP", "192.168.1.100", 15); //Default IP address
+        // WiFiManagerParameter custom_gateway("gateway", "Gateway", "192.168.1.1", 15); //Default Gateway
+        // WiFiManagerParameter custom_subnet("subnet", "Subnet", "255.255.255.0", 15); //Default Subnet mask
+        // wifiManager.addParameter(&custom_ip);
+        // wifiManager.addParameter(&custom_gateway);
+        // wifiManager.addParameter(&custom_subnet);
+        
+        // creating wifi config portal
         if (!wm.startConfigPortal("Smart-ExtBoard-AP")) {
-        Serial.println("failed to connect and hit timeout");
-        digitalWrite(Wifi_Led_Pin, LOW);
-        //reset and try again, or maybe put it to deep sleep
-        ESP.restart();
-        delay(3000);
+            Serial.println("failed to connect and hit timeout");
+            digitalWrite(Wifi_Led_Pin, LOW); // Wifi Connection Mode Indicator Off by Reset
+            ESP.restart(); //reset and try again
+            delay(3000);
         }
 
-        //if you get here you have connected to the WiFi
+        // // Apply static IP configuration part-2
+
+        // IPAddress staticIP, gateway, subnet;
+        // staticIP.fromString(custom_ip.getValue());
+        // gateway.fromString(custom_gateway.getValue());
+        // subnet.fromString(custom_subnet.getValue());
+        // WiFi.config(staticIP, gateway, subnet); 
+
+        digitalWrite(Wifi_Led_Pin, LOW); // Wifi Connection Mode Indicator Off by Connection
+
+        //only prints when ESP connected to the WiFi
         Serial.println("connected to the wifi)");
         Serial.print("IP Address: ");
         Serial.println(WiFi.localIP());
-        digitalWrite(Wifi_Led_Pin, LOW);
     }
 }
 
@@ -58,11 +84,12 @@ void setup() {
 
 void loop() {
 
-    toggle_wificonnect();
+    wifiConnect(); 
+
+    touchControl();
 
     if(WiFi.status() == WL_CONNECTED) {
         webserver();
     }
-
     
 }
