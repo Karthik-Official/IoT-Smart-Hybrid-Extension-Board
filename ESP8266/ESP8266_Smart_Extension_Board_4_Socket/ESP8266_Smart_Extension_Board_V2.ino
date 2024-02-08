@@ -15,15 +15,12 @@
 #define TOGGLE_TRIGGER_PIN 1 // TX - pin will trigger the wifi configuration portal when set to LOW
 
 int timeout = 120; // wifi config trigger timeout
-
 WiFiServer server(80); // Set web server port number to 80
 String header; // Variable to store the HTTP request
-// Current time
-unsigned long currentTime = millis();
-// Previous time
-unsigned long previousTime = 0; 
-// Define timeout time in milliseconds (example: 2000ms = 2s)
-const long timeoutTime = 2000;
+unsigned long currentTime = millis(); // Current time
+unsigned long previousTime = 0; // Previous time
+const long timeoutTime = 2000; // Define timeout time in milliseconds (example: 2000ms = 2s)
+bool webServerRunning = false;  // Variable to track whether the server is running
 
 int relayState1 = 0; // toggle state for relay 1 
 int relayState2 = 0; // toggle state for relay 2
@@ -31,15 +28,20 @@ int relayState3 = 0; // toggle state for relay 3
 int relayState4 = 0; // toggle state for relay 4
 
 void wifiConnect() {
- 
+    
     // wifi configuration portal request button
     if ( digitalRead(TOGGLE_TRIGGER_PIN) == LOW) {
+
+        stopWebServer(); // stops a running web server
+
+        WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
 
         Serial.println("Wifi Config Mode Activated");
         
         digitalWrite(WIFI_LED_PIN, HIGH); // Wifi Connection Mode Indicator On         
 
-        WiFiManager wm;    
+        WiFiManager wm; 
+           
         // wm.resetSettinxgs(); // reset wifi settings - uncomment for testing
         wm.setConfigPortalTimeout(timeout); // set configportal timeout
 
@@ -56,17 +58,17 @@ void wifiConnect() {
         // creating wifi config portal
         if (!wm.startConfigPortal("Smart-ExtBoard-AP")) {
             Serial.println("failed to connect and hit timeout");
+            delay(1000);
             digitalWrite(WIFI_LED_PIN, LOW); // Wifi Connection Mode Indicator Off by Reset
-            // ESP.reset(); //reset and try again
+            ESP.reset(); //reset and try again`
             delay(3000);
         }
-        else {
-            //only prints when ESP connected to the WiFi
-            Serial.println("connected to the wifi)");
-            Serial.print("IP Address: ");
-            Serial.println(WiFi.localIP());
-            digitalWrite(WIFI_LED_PIN, LOW); // Wifi Connection Mode Indicator Off by Connection
-        }
+        
+        //only prints when ESP connected to the WiFi
+        Serial.println("connected to the wifi)");
+        Serial.print("IP Address: ");
+        Serial.println(WiFi.localIP());
+        digitalWrite(WIFI_LED_PIN, LOW); // Wifi Connection Mode Indicator Off by Connection
 
         // // Apply static IP configuration part-2
         // IPAddress staticIP, gateway, subnet;
@@ -74,6 +76,8 @@ void wifiConnect() {
         // gateway.fromString(custom_gateway.getValue());
         // subnet.fromString(custom_subnet.getValue());
         // WiFi.config(staticIP, gateway, subnet); 
+
+        startWebServer(); // starts the web server
     }
 
 } 
@@ -211,8 +215,7 @@ void webControl() {
                             Serial.println("Relay 1 off");
                             relayOnOff(1, false);
                         } 
-
-                        if (header.indexOf("GET /2/on") >= 0) {
+                        else if (header.indexOf("GET /2/on") >= 0) {
                             Serial.println("Relay 2 on");
                             relayOnOff(2, true);
                         } 
@@ -220,8 +223,7 @@ void webControl() {
                             Serial.println("Relay 2 off");
                             relayOnOff(2, false);
                         } 
-
-                        if (header.indexOf("GET /3/on") >= 0) {
+                        else if (header.indexOf("GET /3/on") >= 0) {
                             Serial.println("Relay 3 on");
                             relayOnOff(3, true);
                         } 
@@ -229,8 +231,7 @@ void webControl() {
                             Serial.println("Relay 3 off");
                             relayOnOff(3, false);
                         } 
-
-                        if (header.indexOf("GET /4/on") >= 0) {
+                        else if (header.indexOf("GET /4/on") >= 0) {
                             Serial.println("Relay 4 on");
                             relayOnOff(4, true);
                         } 
@@ -269,25 +270,25 @@ void webControl() {
 
                         // If the output4State is off, it displays the ON button 
 
-                        if (relayState1==0) {
+                        if (relayState1==1) {
                             client.println("<p><a href=\"/1/on\"><button class=\"button\">ON</button></a></p>");
                         } 
                         else {
                             client.println("<p><a href=\"/1/off\"><button class=\"button button2\">OFF</button></a></p>");
                         }
-                        if (relayState2==0) {
+                        if (relayState2==1) {
                             client.println("<p><a href=\"/2/on\"><button class=\"button\">ON</button></a></p>");
                         } 
                         else {
                             client.println("<p><a href=\"/2/off\"><button class=\"button button2\">OFF</button></a></p>");
                         }
-                        if (relayState3==0) {
+                        if (relayState3==1) {
                             client.println("<p><a href=\"/3/on\"><button class=\"button\">ON</button></a></p>");
                         } 
                         else {
                             client.println("<p><a href=\"/3/off\"><button class=\"button button2\">OFF</button></a></p>");
                         }
-                        if (relayState4==0) {
+                        if (relayState4==1) {
                             client.println("<p><a href=\"/4/on\"><button class=\"button\">ON</button></a></p>");
                         } 
                         else {
@@ -319,11 +320,34 @@ void webControl() {
     }    
 }
 
+void startWebServer() {
+
+  // Start the server only if WiFi is connected
+  if (WiFi.status() == WL_CONNECTED) {
+    // server.on("/", HTTP_GET, handleRoot);
+    // Add other server routes as needed
+    server.begin();
+    Serial.println("HTTP server started");
+    webServerRunning = true;
+  }
+
+}
+
+void stopWebServer() {
+
+  if (webServerRunning) {
+    server.stop();
+    Serial.println("HTTP server stopped");
+    webServerRunning = false;
+  }
+
+}
+
 void setup() {
 
     Serial.begin(115200); 
-    WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
-    server.begin();
+    Serial.println("Setting up...");
+    // WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
     // Wifi Modules
     pinMode(TOGGLE_TRIGGER_PIN, INPUT_PULLUP);
     pinMode(WIFI_LED_PIN, OUTPUT);
@@ -343,15 +367,14 @@ void setup() {
     pinMode(TOUCH_SENSOR_3, INPUT_PULLUP);
     pinMode(TOUCH_SENSOR_4, INPUT_PULLUP);
     
+    startWebServer();
+    
 }
 
 void loop() {
-
+    
     wifiConnect(); 
-
     touchControl();
-    // if(WiFi.status() == WL_CONNECTED) {
-        webControl();
-    // }
+    webControl();
     
 }
