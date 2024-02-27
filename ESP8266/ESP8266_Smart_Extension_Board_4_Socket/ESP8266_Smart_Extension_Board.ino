@@ -14,7 +14,7 @@
 #define WIFI_LED_PIN 0 // D3 - Wifi Connection Indicator
 #define TOGGLE_TRIGGER_PIN 3 // RX - pin will trigger the wifi configuration portal when set to LOW
 
-int timeout = 120; // wifi config trigger timeout
+int timeout = 60; // wifi config trigger timeout
 WiFiServer server(80); // Set web server port number to 80
 String header; // Variable to store the HTTP request
 unsigned long currentTime = millis(); // Current time
