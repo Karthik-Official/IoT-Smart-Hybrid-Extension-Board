@@ -7,8 +7,8 @@
 #define PIN_RELAY_4 12 //D6
 
 #define TOUCH_SENSOR_1 10 //SD3
-#define TOUCH_SENSOR_2 16  //D0
-#define TOUCH_SENSOR_3 13  //D7
+#define TOUCH_SENSOR_2 16 //D0
+#define TOUCH_SENSOR_3 13 //D7
 #define TOUCH_SENSOR_4 15 //D8  
 
 #define WIFI_LED_PIN 0 // D3 - Wifi Connection Indicator
@@ -192,38 +192,18 @@ void webControl() {
                         client.println();
                         
                         // To turn the Relay on and off
-                        if (header.indexOf("GET /1/on") >= 0) {
-                            Serial.println("Relay 1 on");
+                        if (header.indexOf("GET /1") >= 0) {
                             relayOnOff(1);
                         } 
-                        else if (header.indexOf("GET /1/off") >= 0) {
-                            Serial.println("Relay 1 off");
-                            relayOnOff(1);
-                        } 
-                        else if (header.indexOf("GET /2/on") >= 0) {
-                            Serial.println("Relay 2 on");
+                        else if (header.indexOf("GET /2") >= 0) {
                             relayOnOff(2);
                         } 
-                        else if (header.indexOf("GET /2/off") >= 0) {
-                            Serial.println("Relay 2 off");
-                            relayOnOff(2);
-                        } 
-                        else if (header.indexOf("GET /3/on") >= 0) {
-                            Serial.println("Relay 3 on");
+                        else if (header.indexOf("GET /3") >= 0) {
                             relayOnOff(3);
                         } 
-                        else if (header.indexOf("GET /3/off") >= 0) {
-                            Serial.println("Relay 3 off");
-                            relayOnOff(3);
-                        } 
-                        else if (header.indexOf("GET /4/on") >= 0) {
-                            Serial.println("Relay 4 on");
+                        else if (header.indexOf("GET /4") >= 0) {
                             relayOnOff(4);
-                        } 
-                        else if (header.indexOf("GET /4/off") >= 0) {
-                            Serial.println("Relay 4 off");
-                            relayOnOff(4);
-                        } 
+                        }
                                     
                         // Display the HTML web page
                         client.println("<!DOCTYPE html><html>");
@@ -234,52 +214,54 @@ void webControl() {
                         client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
                         client.println(".button { background-color: #195B6A; border: none; color: white; padding: 16px 40px;");
                         client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
-                        client.println(".button2 {background-color: #77878A;}</style></head>");
+                        client.println(".button2 {background-color: #77878A;}</style>");
+                        client.println("<script>function autoRefresh() {window.location.href = window.location.protocol + '//' + window.location.hostname;} setInterval(autoRefresh, 1000); </script></head>");
                         
                         // Web Page Heading
                         client.println("<body><h1>Smart Extension Board (ESP8266)</h1>");
-                        
-                        // // Display current state, and ON/OFF buttons for Relay 5  
-                        // client.println("<p>Relay 1 - State " + output5State + "</p>");
 
-                        // If the output5State is off, it displays the ON button       
-                        // if (output5State=="off") {
-                        //     client.print( " <p><button id='navigateButton1' class='button'>ON</button></a></p> <script> document.getElementById('navigateButton1').addEventListener('click', function() { window.location.href = '/5/on'; setTimeout(function() { window.location.href = '/';}, 1000);}); </script> ");   
-                        // } 
-                        // else {
-                        //     client.print( " <p><button id='navigateButton2' class='button button2'>OFF</button></a></p> <script> document.getElementById('navigateButton2').addEventListener('click', function() { window.location.href = '/5/off'; setTimeout(function() { window.location.href = '/';}, 1000);}); </script> ");             
-                        // } 
-                        
-                        // // Display current state, and ON/OFF buttons for Relay 4  
-                        // client.println("<p>Relay 4 - State " + output4State + "</p>");
+                        // Updating all switches
+                        client.println("<p><h2 id='switch1'>");
+                        if (relayState1==0) {
+                            client.println("Switch 1 ON:</h2>");
+                        } 
+                        else {
+                            client.println("Switch 1 Off:</h2>");
+                        }
+                        client.println("<a href=\"/1\"><button class=\"button\">Switch</button></a>");
+                        client.println("</p>");
 
-                        // If the output4State is off, it displays the ON button 
+                        client.println("<p><h2 id='switch2'>");
+                        if (relayState2==0) {
+                            client.println("Switch 2 ON:</h2>");
+                        } 
+                        else {
+                            client.println("Switch 2 Off:</h2>");
+                        }
+                        client.println("<a href=\"/2\"><button class=\"button\">Switch</button></a>");
+                        client.println("</p>");
 
-                        if (relayState1==1) {
-                            client.println("<p><a href=\"/1/on\"><button class=\"button\">ON</button></a></p>");
+                        client.println("<p><h2 id='switch3'>");
+                        if (relayState3==0) {
+                            client.println("Switch 3 ON:</h2>");
                         } 
                         else {
-                            client.println("<p><a href=\"/1/off\"><button class=\"button button2\">OFF</button></a></p>");
+                            client.println("Switch 3 Off:</h2>");
                         }
-                        if (relayState2==1) {
-                            client.println("<p><a href=\"/2/on\"><button class=\"button\">ON</button></a></p>");
+                        client.println("<a href=\"/3\"><button class=\"button\">Switch</button></a>");
+                        client.println("</p>");
+
+                        client.println("<p><h2 id='switch4'>");
+                        if (relayState4==0) {
+                            client.println("Switch 4 ON:</h2>");
                         } 
                         else {
-                            client.println("<p><a href=\"/2/off\"><button class=\"button button2\">OFF</button></a></p>");
+                            client.println("Switch 4 Off:</h2>");
                         }
-                        if (relayState3==1) {
-                            client.println("<p><a href=\"/3/on\"><button class=\"button\">ON</button></a></p>");
-                        } 
-                        else {
-                            client.println("<p><a href=\"/3/off\"><button class=\"button button2\">OFF</button></a></p>");
-                        }
-                        if (relayState4==1) {
-                            client.println("<p><a href=\"/4/on\"><button class=\"button\">ON</button></a></p>");
-                        } 
-                        else {
-                            client.println("<p><a href=\"/4/off\"><button class=\"button button2\">OFF</button></a></p>");
-                        }
-        
+                        client.println("<a href=\"/4\"><button class=\"button\">Switch</button></a>");
+                        client.println("</p>");
+
+
                         client.println("</body></html>");
                         // The HTTP response ends with another blank line
                         client.println();
@@ -361,6 +343,6 @@ void loop() {
     
     wifiConnect(); 
     touchControl();
-    // webControl();
+    webControl();
     
 }
