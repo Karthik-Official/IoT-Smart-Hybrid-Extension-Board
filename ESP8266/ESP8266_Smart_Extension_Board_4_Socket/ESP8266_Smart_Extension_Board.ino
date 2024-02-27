@@ -32,7 +32,6 @@ WiFiManager wm;
 void wifiConnect() {
     
     // wifi configuration portal request button
-    // if ( digitalRead(TOGGLE_TRIGGER_PIN) == HIGH || digitalRead(TOUCH_SENSOR_1) == HIGH || digitalRead(TOUCH_SENSOR_2) == HIGH || digitalRead(TOUCH_SENSOR_3) == HIGH || digitalRead(TOUCH_SENSOR_4) == HIGH ) {
     if ( digitalRead(TOGGLE_TRIGGER_PIN) == HIGH ) {
 
         stopWebServer(); // stops a running web server
@@ -291,8 +290,6 @@ void startWebServer() {
 
   // Start the server only if WiFi is connected
   if (WiFi.status() == WL_CONNECTED) {
-    // server.on("/", HTTP_GET, handleRoot);
-    // Add other server routes as needed
     server.begin();
     Serial.println("HTTP server started");
     webServerRunning = true;
