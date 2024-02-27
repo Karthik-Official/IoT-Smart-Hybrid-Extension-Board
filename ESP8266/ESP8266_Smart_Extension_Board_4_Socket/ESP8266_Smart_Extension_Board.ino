@@ -6,13 +6,13 @@
 #define PIN_RELAY_3 14 //D5
 #define PIN_RELAY_4 12 //D6
 
-#define TOUCH_SENSOR_1 10  //SD3
-#define TOUCH_SENSOR_2 9   //SD2 
+#define TOUCH_SENSOR_1 10 //SD3
+#define TOUCH_SENSOR_2 16  //D0
 #define TOUCH_SENSOR_3 13  //D7
-#define TOUCH_SENSOR_4 0   //RX
+#define TOUCH_SENSOR_4 15 //D8  
 
-#define WIFI_LED_PIN 3 // RX - Wifi Connection Indicator
-#define TOGGLE_TRIGGER_PIN 1 // TX - pin will trigger the wifi configuration portal when set to LOW
+#define WIFI_LED_PIN 0 // D3 - Wifi Connection Indicator
+#define TOGGLE_TRIGGER_PIN 3 // RX - pin will trigger the wifi configuration portal when set to LOW
 
 int timeout = 120; // wifi config trigger timeout
 WiFiServer server(80); // Set web server port number to 80
@@ -22,15 +22,18 @@ unsigned long previousTime = 0; // Previous time
 const long timeoutTime = 2000; // Define timeout time in milliseconds (example: 2000ms = 2s)
 bool webServerRunning = false;  // Variable to track whether the server is running
 
-int relayState1 = 0; // toggle state for relay 1 
-int relayState2 = 0; // toggle state for relay 2
-int relayState3 = 0; // toggle state for relay 3
-int relayState4 = 0; // toggle state for relay 4
+int relayState1 = 1; // toggle state for relay 1, 0 means On, 1 means Off.
+int relayState2 = 1; // toggle state for relay 2, 0 means On, 1 means Off.
+int relayState3 = 1; // toggle state for relay 3, 0 means On, 1 means Off.
+int relayState4 = 1; // toggle state for relay 4, 0 means On, 1 means Off.
+
+WiFiManager wm; 
 
 void wifiConnect() {
     
     // wifi configuration portal request button
-    if ( digitalRead(TOGGLE_TRIGGER_PIN) == LOW) {
+    // if ( digitalRead(TOGGLE_TRIGGER_PIN) == HIGH || digitalRead(TOUCH_SENSOR_1) == HIGH || digitalRead(TOUCH_SENSOR_2) == HIGH || digitalRead(TOUCH_SENSOR_3) == HIGH || digitalRead(TOUCH_SENSOR_4) == HIGH ) {
+    if ( digitalRead(TOGGLE_TRIGGER_PIN) == HIGH ) {
 
         stopWebServer(); // stops a running web server
 
@@ -40,8 +43,6 @@ void wifiConnect() {
         
         digitalWrite(WIFI_LED_PIN, HIGH); // Wifi Connection Mode Indicator On         
 
-        WiFiManager wm; 
-           
         // wm.resetSettinxgs(); // reset wifi settings - uncomment for testing
         wm.setConfigPortalTimeout(timeout); // set configportal timeout
 
@@ -82,16 +83,16 @@ void wifiConnect() {
 
 } 
 
-void relayOnOff(int relay, bool state) {
+void relayOnOff(int relay) {
 
     switch(relay){
       case 1: 
-          if(state == true && relayState1 == 1) {
+          if(relayState1 == 1) {
             digitalWrite(PIN_RELAY_1, LOW); // turn on relay 1
             relayState1 = 0;
             Serial.println("Switch 1 ON");
           }
-          else if (state == false && relayState1 == 0) {
+          else if (relayState1 == 0) {
             digitalWrite(PIN_RELAY_1, HIGH); // turn off relay 1
             relayState1 = 1;
             Serial.println("Switch 1 OFF");
@@ -99,12 +100,12 @@ void relayOnOff(int relay, bool state) {
           delay(100);
       break;
       case 2: 
-          if(state == true  && relayState2 == 1) {
+          if(relayState2 == 1) {
           digitalWrite(PIN_RELAY_2, LOW); // turn on relay 2
           relayState2 = 0;
           Serial.println("Switch 2 ON");
           }
-          else if (state == false && relayState2 == 0) {
+          else if (relayState2 == 0) {
           digitalWrite(PIN_RELAY_2, HIGH); // turn off relay 2
           relayState2 = 1;
           Serial.println("Switch 2 OFF");
@@ -112,12 +113,12 @@ void relayOnOff(int relay, bool state) {
           delay(100);
       break;
       case 3: 
-          if(state == true  && relayState3 == 1){
+          if(relayState3 == 1){
           digitalWrite(PIN_RELAY_3, LOW); // turn on relay 3
           relayState3 = 0;
           Serial.println("Switch 3 ON");
           }
-          else if (state == false && relayState3 == 0) {
+          else if (relayState3 == 0) {
           digitalWrite(PIN_RELAY_3, HIGH); // turn off relay 3
           relayState3 = 1;
           Serial.println("Switch 3 OFF");
@@ -125,12 +126,12 @@ void relayOnOff(int relay, bool state) {
           delay(100);
       break;
       case 4: 
-          if(state == true  && relayState4 == 1){
+          if(relayState4 == 1){
           digitalWrite(PIN_RELAY_4, LOW); // turn on relay 4
           relayState4 = 0;
           Serial.println("Switch 4 ON");
           }
-          else if (state == false && relayState4 == 0) {
+          else if (relayState4 == 0) {
           digitalWrite(PIN_RELAY_4, HIGH); // turn off relay 4
           relayState4 = 1;
           Serial.println("Switch 4 OFF");
@@ -145,36 +146,20 @@ void touchControl() {
 
     //Manual Touch Switch Control
     if (digitalRead(TOUCH_SENSOR_1) == HIGH){
-        delay(200);
-        relayOnOff(1, true);      
-    }
-    else if (digitalRead(TOUCH_SENSOR_1) == LOW) {
-        delay(200);
-        relayOnOff(1, false);  
-    }
-    if (digitalRead(TOUCH_SENSOR_2) == HIGH){
-        delay(200);
-        relayOnOff(2, true);      
-    }
-    else if (digitalRead(TOUCH_SENSOR_2) == LOW) {
-        delay(200);
-        relayOnOff(2, false);  
-    }
-    if (digitalRead(TOUCH_SENSOR_3) == HIGH){
-        
-        relayOnOff(3, true);      
-    }
-    else if (digitalRead(TOUCH_SENSOR_3) == LOW) {
-        
-        relayOnOff(3, false);  
-    }
-    if (digitalRead(TOUCH_SENSOR_4) == HIGH){
-        delay(200);
-        relayOnOff(4, true);      
-    }
-    else if (digitalRead(TOUCH_SENSOR_4) == LOW) {
-        delay(200);
-        relayOnOff(4, false);  
+        delay(500);
+        relayOnOff(1);      
+    }   
+    if (digitalRead(TOUCH_SENSOR_2) == HIGH) {
+        delay(500);
+        relayOnOff(2);  
+    }   
+    if (digitalRead(TOUCH_SENSOR_3) == HIGH) {
+        delay(500);
+        relayOnOff(3);  
+    }   
+    if (digitalRead(TOUCH_SENSOR_4) == HIGH) {
+        delay(500);
+        relayOnOff(4);  
     }
     
 }
@@ -209,35 +194,35 @@ void webControl() {
                         // To turn the Relay on and off
                         if (header.indexOf("GET /1/on") >= 0) {
                             Serial.println("Relay 1 on");
-                            relayOnOff(1, true);
+                            relayOnOff(1);
                         } 
                         else if (header.indexOf("GET /1/off") >= 0) {
                             Serial.println("Relay 1 off");
-                            relayOnOff(1, false);
+                            relayOnOff(1);
                         } 
                         else if (header.indexOf("GET /2/on") >= 0) {
                             Serial.println("Relay 2 on");
-                            relayOnOff(2, true);
+                            relayOnOff(2);
                         } 
                         else if (header.indexOf("GET /2/off") >= 0) {
                             Serial.println("Relay 2 off");
-                            relayOnOff(2, false);
+                            relayOnOff(2);
                         } 
                         else if (header.indexOf("GET /3/on") >= 0) {
                             Serial.println("Relay 3 on");
-                            relayOnOff(3, true);
+                            relayOnOff(3);
                         } 
                         else if (header.indexOf("GET /3/off") >= 0) {
                             Serial.println("Relay 3 off");
-                            relayOnOff(3, false);
+                            relayOnOff(3);
                         } 
                         else if (header.indexOf("GET /4/on") >= 0) {
                             Serial.println("Relay 4 on");
-                            relayOnOff(4, true);
+                            relayOnOff(4);
                         } 
                         else if (header.indexOf("GET /4/off") >= 0) {
                             Serial.println("Relay 4 off");
-                            relayOnOff(4, false);
+                            relayOnOff(4);
                         } 
                                     
                         // Display the HTML web page
@@ -347,7 +332,7 @@ void setup() {
 
     Serial.begin(115200); 
     Serial.println("Setting up...");
-    // WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
+    WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
     // Wifi Modules
     pinMode(TOGGLE_TRIGGER_PIN, INPUT_PULLUP);
     pinMode(WIFI_LED_PIN, OUTPUT);
@@ -366,15 +351,16 @@ void setup() {
     pinMode(TOUCH_SENSOR_2, INPUT_PULLUP);
     pinMode(TOUCH_SENSOR_3, INPUT_PULLUP);
     pinMode(TOUCH_SENSOR_4, INPUT_PULLUP);
-    
+
+    wm.autoConnect();
     startWebServer();
     
 }
-
+ 
 void loop() {
     
     wifiConnect(); 
     touchControl();
-    webControl();
+    // webControl();
     
 }
