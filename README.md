@@ -58,7 +58,7 @@ Coming Soon ...
 10. You can also control it using manual Switches (Push Button or Touch Sensor) and yes, it can also work in offline.
 
 > [!CAUTION]
-> Using Ac Current Is Highly Dangerous, Take Proper Precautions While Working With High Voltage. Do It At Your Own Risk.
+> Working with Ac Current Is Highly Dangerous, Take Proper Precautions While Working With High Voltage. Do It At Your Own Risk.
 
 ### How to tweak the project for your own use case
 - You can use either Touch sensor or Push button for manual control, while the touch sensor `TTP223 Module` requires power, push button does not need any.
