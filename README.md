@@ -17,7 +17,7 @@ This Smart Extension Board is a Smart Home Automation Project using a famous Mic
 ---
 
 ## Demo video
-
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/iKBKzcNNChQ/3.jpg)](https://www.youtube.com/watch?v=iKBKzcNNChQ)
 ---
 
 ## Schematics and Project
