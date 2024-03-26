@@ -20,11 +20,15 @@ This Smart Extension Board is a Smart Home Automation Project using a famous Mic
 
 ---
 
-## Schematics and Diagram
+## Schematics and Project
 
 ### ESP8266 Based:
 
 ![ESP8266_Smart_Extension_Board_Scematics](https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/5f7441b6-cafc-4e7e-b13d-e8c369ce04ba)
+
+![SEB Internal Wiring 1 marked ](https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/92a75ab0-6893-42d2-a7b7-8f4069294944)
+
+![SEB Thumb](https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/eb953156-3c45-4f22-9b48-39f15fb07f4f)
 ### ESP32 Based:
 
 Coming Soon ...
@@ -98,4 +102,4 @@ to discuss what you would like to change.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/) - License
+[MIT](https://choosealicense.com/licenses/mit/) - License 
