@@ -24,11 +24,26 @@ This Smart Extension Board is a Smart Home Automation Project using a famous Mic
 
 ### ESP8266 Based:
 
-![ESP8266_Smart_Extension_Board_Scematics](https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/5f7441b6-cafc-4e7e-b13d-e8c369ce04ba)
 
-![SEB Internal Wiring 1 marked ](https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/92a75ab0-6893-42d2-a7b7-8f4069294944)
 
-![SEB Thumb](https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/eb953156-3c45-4f22-9b48-39f15fb07f4f)
+<table>
+  <tr>
+    <img src="https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/5f7441b6-cafc-4e7e-b13d-e8c369ce04ba">
+  </tr>
+  <tr>
+    <td>
+      <img src="https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/eb953156-3c45-4f22-9b48-39f15fb07f4f" alt="Project Demo Picture" title="Project Demo">
+    </td>
+    <td>
+      <img src="https://github.com/Karthik-Official/IoT-Smart-Extension-Board/assets/88947048/92a75ab0-6893-42d2-a7b7-8f4069294944" alt="Project Internal Wiring" title="Project Internal Wiring">
+    </td>
+  </tr>
+
+  <tr>
+    <td align= 'center'>Project Demo Picture</td>
+    <td align= 'center'>Project Internal Wiring</td>
+  </tr>
+</table>
 ### ESP32 Based:
 
 Coming Soon ...
@@ -83,7 +98,7 @@ Coming Soon ...
 ## Challenges Faced and Lessons Learned
 
 - The GPIO pins that I selected in ESP8266 are the only GPIO pins that an ESP8266 Module can be allow to be used to create this Smart Extension Board. 
-- None other combination of GPIO Pins will work properly in ESP8266, because of some GPIOs are not recommended to use, and others have very specific functions.
+- None other combination of GPIO Pins will work properly in ESP8266, because of some GPIO Pins are not recommended to use, and others have very specific functions.
 - Even though I already read various PDF Manuals of the ESP8266. To find those right ESP8266 GPIO Pins, it literally took me Days.
 - So No matter how many Documentations we read, there will always be a thing that will make us confusing and irritating while doing the Real Project.
 - Therefore always `Keep Learning and be Enthusiastic` to break down those hard walls.
@@ -93,12 +108,15 @@ Coming Soon ...
 ## Known Issues
 
 - The Webpage used to control the Smart Extension Board is very simple and doesn't give much information except the ON and OFF status.
+- I have made this project in a way that it can be only controlled by the webpage in a LAN. 
+- Google Assistant and Alexa control are very time consuming to implement properly.
 
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 - Any changes in webpage that controlling the Smart Extension Board are great.
+- Any Opensourced Google Assistant and Alexa Implementation are welcome.
 
 ## License
 
