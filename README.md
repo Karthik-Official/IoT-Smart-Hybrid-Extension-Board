@@ -1,5 +1,5 @@
 <h1 align="center">
-Smart Extension Board
+Smart Hybrid Extension Board
 </h1>
 <div align="center">
 A IoT based Smart Extension Board Using ESP Module
@@ -9,7 +9,7 @@ A IoT based Smart Extension Board Using ESP Module
 
 ## Introduction
 
-This Smart Extension Board is a Smart Home Automation Project using a famous Microcontrollers known as Espressif's chips, modules and development boards are widely deployed in such products as home appliances, light bulbs, smart speakers, consumer electronics and payment terminals
+This Smart Hybrid Extension Board is a Smart Home Automation Project using a famous Microcontrollers known as Espressif's chips, modules and development boards are widely deployed in such products as home appliances, light bulbs, smart speakers, consumer electronics and payment terminals
 <br><br>Technologies Used:
 - The popular and widely used ESP Modules are ESP32 and ESP8266.
 - The ESP Modules are low-cost, low-power system on a chip series of microcontrollers with Wi-Fi and Bluetooth capabilities.
