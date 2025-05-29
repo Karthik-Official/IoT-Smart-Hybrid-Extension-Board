@@ -15,6 +15,23 @@ This Smart Extension Board is a Smart Home Automation Project using a famous Mic
 - The ESP Modules are low-cost, low-power system on a chip series of microcontrollers with Wi-Fi and Bluetooth capabilities.
 
 ---
+## Hybrid Dual-Mode Control System
+
+This smart extension board uses a **hybrid system** to offer both **offline** and **online** control:
+
+### 📴 Offline Mode – Touch Control  
+- Control switches using **capacitive touch sensors**.  
+- Works like a regular extension board—**no Wi-Fi needed**.
+
+### 🌐 Online Mode – Wi-Fi Web Interface  
+- ESP8266 hosts a local **web server**.  
+- Control devices through a browser on the same Wi-Fi network.
+
+### 🔄 Seamless Switching  
+- Listens to both **touch inputs** and **HTTP requests** at all times.  
+- **No reboot or setup changes** needed between modes.
+
+---
 
 ## Demo video
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/iKBKzcNNChQ/hqdefault.jpg)](https://www.youtube.com/watch?v=iKBKzcNNChQ)
@@ -23,8 +40,6 @@ This Smart Extension Board is a Smart Home Automation Project using a famous Mic
 ## Schematics and Project
 
 ### ESP8266 Based:
-
-
 
 <table>
   <tr>
@@ -49,6 +64,8 @@ This Smart Extension Board is a Smart Home Automation Project using a famous Mic
 Coming Soon ...
 
 ---
+
+
 
 ## Prerequisites
 
